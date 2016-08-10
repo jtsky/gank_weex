@@ -4,6 +4,8 @@ import android.app.Application;
 
 import com.taobao.weex.InitConfig;
 import com.taobao.weex.WXSDKEngine;
+import com.taobao.weex.common.WXException;
+import com.weex.sample.module.MyModule;
 
 /**
  * 注意要在Manifest中启用
@@ -17,10 +19,16 @@ import com.taobao.weex.WXSDKEngine;
  */
 public class WXApplication extends Application {
 
-  @Override
-  public void onCreate() {
-    super.onCreate();
-    InitConfig config=new InitConfig.Builder().setImgAdapter(new ImageAdapter()).build();
-    WXSDKEngine.initialize(this,config);
-  }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        InitConfig config = new InitConfig.Builder()
+                .setImgAdapter(new ImageAdapter()).build();
+        WXSDKEngine.initialize(this, config);
+        try {
+            WXSDKEngine.registerModule("myModule", MyModule.class);
+        } catch (WXException e) {
+            e.printStackTrace();
+        }
+    }
 }
