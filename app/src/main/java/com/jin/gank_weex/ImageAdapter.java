@@ -1,4 +1,4 @@
-package com.weex.sample;
+package com.jin.gank_weex;
 
 import android.text.TextUtils;
 import android.widget.ImageView;

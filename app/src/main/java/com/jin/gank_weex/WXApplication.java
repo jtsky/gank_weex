@@ -1,11 +1,14 @@
-package com.weex.sample;
+package com.jin.gank_weex;
 
 import android.app.Application;
 
+import com.jin.gank_weex.module.GetPageIndexModule;
+import com.jin.gank_weex.module.MyModule;
+import com.jin.gank_weex.module.URLHelperModule;
 import com.taobao.weex.InitConfig;
+import com.taobao.weex.WXEnvironment;
 import com.taobao.weex.WXSDKEngine;
 import com.taobao.weex.common.WXException;
-import com.weex.sample.module.MyModule;
 
 /**
  * 注意要在Manifest中启用
@@ -23,12 +26,23 @@ public class WXApplication extends Application {
     public void onCreate() {
         super.onCreate();
         InitConfig config = new InitConfig.Builder()
-                .setImgAdapter(new ImageAdapter()).build();
+                .setImgAdapter(new ImageAdapter())
+                .build();
         WXSDKEngine.initialize(this, config);
         try {
             WXSDKEngine.registerModule("myModule", MyModule.class);
+            WXSDKEngine.registerModule("myURL", URLHelperModule.class);
+            WXSDKEngine.registerModule("indexModule", GetPageIndexModule.class);
         } catch (WXException e) {
             e.printStackTrace();
         }
+
+        initDebugEnvironment(true, "192.168.200.26");
+
+    }
+
+    private void initDebugEnvironment(boolean enable, String host) {
+        WXEnvironment.sRemoteDebugMode = enable;
+        WXEnvironment.sRemoteDebugProxyUrl = "ws://" + host + ":8088/debugProxy/native";
     }
 }

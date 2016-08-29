@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="AppBarLayout" type="id"/>
+    <item name="common_toolbar" type="id"/>
+
+</resources>

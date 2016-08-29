@@ -1,4 +1,4 @@
-package com.weex.sample.module;
+package com.jin.gank_weex.module;
 
 import android.widget.Toast;
 
