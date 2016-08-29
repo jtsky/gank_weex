@@ -1,0 +1,23 @@
+<template>
+    <div>
+      <text class='text'>
+        new page
+      </text>
+    </div>
+</template>
+
+<script>
+  module.exports = {
+    methods: {
+          jump: function () {
+            this.$openURL('http://www.baidu.com/')
+          }
+        }
+  }
+</script>
+
+<style>
+.text {
+  font-size:60
+}
+</style>

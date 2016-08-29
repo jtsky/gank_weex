@@ -1,0 +1,104 @@
+<template>
+    <list loadmoreoffset=200>
+        <refresh class="loading-view" display="{{loading_display}}" onrefresh="{{refresh}}">
+            <loading-indicator style="height:60px;width:60px"></loading-indicator>
+        </refresh>
+        <cell repeat="{{items}}">
+            <wxc-list-item class="item">
+                <div style="padding:10;">
+                    <img resize="cover" style="width: {{devices.width}}px; height:400px" src="{{url}}"></img>
+                </div>
+            </wxc-list-item>
+        </cell>
+        <loading class="loading-view" display="{{loading_display}}" onloading="{{loadData(api.count,api.page)}}">
+            <loading-indicator style="height:60px;width:60px"></loading-indicator>
+        </loading>
+    </list>
+</template>
+
+
+<script>
+    require('weex-components');
+    var DevicesUtil = require('./common/devicesUtil.js');
+    var stream = require('@weex-module/stream');
+    var modal = require('@weex-module/modal');
+    module.exports = {
+        data: {
+            loading_display: 'hide',
+            items: [],
+            devices: {
+                width: null,
+                height: null
+            },
+            api: {
+                page: 1,
+                count: 10
+            }
+        },
+
+        //生命周期函数 created
+        created: function() {
+            console.log('created');
+            var config = this.$getConfig();
+            var devices = DevicesUtil.getDevices(config);
+            this.devices.width = devices.width;
+            this.devices.height = devices.height;
+            this.loadData(this.api.count, this.api.page);
+        },
+
+        methods: {
+
+            loadData: function(count, page) {
+                this.loading_display = 'show';
+                var vm = this;
+                var apiUrl = "http://gank.io/api/data/%E7%A6%8F%E5%88%A9/" + count + "/" + page;
+                //var apiUrl = `http://gank.io/api/data/%E7%A6%8F%E5%88%A9/${count}/${page}`;
+                //获取设备相关信息
+                //加载数据
+                stream.fetch({
+                    method: 'GET',
+                    url: apiUrl,
+                    type: 'json'
+                }, function(response) {
+                    if (response.data.results.length != 0) {
+                        vm.loading_display = 'hide';
+                        vm.items = vm.items.concat(response.data.results);
+                        vm.api.page = vm.items.length / vm.api.count + 1;
+                    } else {
+                        modal.toast({
+                            'message': '数据为空',
+                            'duration': 2
+                        });
+                    }
+                }, function(response) {
+                    //加载进度
+                });
+            },
+            refresh: function() {
+                this.items = [];
+                this.loadData(10, 1);
+            }
+        }
+    }
+</script>
+<style>
+    .text {
+        fontSize: 30;
+        color: red;
+        margin-left: 50;
+        margin-top: 50;
+    }
+
+    .item {
+        margin-left: 20;
+        margin-right: 20;
+        margin-top: 20;
+    }
+
+    .loading-view {
+        height: 80;
+        width: 720;
+        justify-content: center;
+        align-items: center;
+    }
+</style>
